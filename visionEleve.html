@@ -82,7 +82,7 @@ while (pos !=-1) {
 
 
 action=historique.substring(pos+eleve.length,historique.indexOf('=',pos+1))
-separation=action.search(/[a-z]/)
+separation=action.search(/[a-zA-Z]/)
 
 dateaction=action.substring(0,separation)
 action=action.substring(separation)
