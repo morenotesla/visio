@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <meta charset="utf-8" />
+<link rel="stylesheet" href="style.css" />
+        <title>Actions</title>
+
+    </head>
+	
+<body>	
+	
+	<div id="boutons">
+	
+<p style="color:red">
+	
+	<input type="button" class="boutonAction" value="Bavardage" onclick="infraction('bavardage')" style="color: inherit" >
+	
+	<input type="button" class="boutonAction" value="Telephone" onclick="infraction('telephone')" style="color: inherit">
+	
+	<input type="button" class="boutonAction" value="Insolence" onclick="infraction('insolence')" style="color: inherit">
+	</p>
+	
+	
+	
+	<p style="color:darkorange">
+	
+	<input type="button" class="boutonAction" value="Materiel" onclick="cancre('materiel')" style="color: inherit">
+	
+	<input type="button" class="boutonAction" value="Travail-" onclick="cancre('travail-')" style="color: inherit">
+	
+	<input type="button" class="boutonAction" value="Installation-" onclick="cancre('installation-')" style="color: inherit">
+	
+	<input type="button" class="boutonAction" value="Retard" onclick="cancre('retard')" style="color: inherit">
+	
+	<input type="button" class="boutonAction" value="Absence" onclick="cancre('absence')" style="color: inherit">
+	</p>
+	    
+<p style="color:green">		
+
+
+	<input type="button" class="boutonAction" value="Participation" onclick="serieux('participation')" style="color: inherit" >
+	<input type="button" class="boutonAction" value="installation+" onclick="serieux('installation+')" style="color: inherit" >
+	<input type="button" class="boutonAction" value="Travail+" onclick="serieux('travail+')" style="color: inherit" >
+	<input type="button" class="boutonAction" value="TRAVAIL++" onclick="serieux('TRAVAIL++')" style="color: inherit" >
+
+	
+	</p>
+	
+<p>	
+	
+	
+	<input type="button" class="boutonAction" value="Punition" onclick="calendrier('punition')" style="color: red">
+	
+	<input type="button" class="boutonAction" value="Carnet" onclick="calendrier('carnet')" style="color: red">
+	
+	<input type="button" class="boutonAction" value="Exercice" onclick="calendrier('exercice')" style="color: inherit">
+	
+	<input type="button" class="boutonAction" value="Fiche" onclick="fiche()" style="color: inherit">
+	
+	<input type="button" class="boutonAction" value="Menu" onclick="document.location.href='index.html'">
+</p>	
+
+
+</div>
+
+
+<input id="calendrier" type="Date" style="display : none ; " onblur="enregistre(this.value)">
+
+
+</body>
+<script src="recupInfo.js"> </script>
+
+<script>
+
+
+function fiche() {
+
+document.location.href='visionEleve.html?'+location.search.substring(1)
+
+}
+
+function infraction(action) {
+ajout(action,location.search.substring(1),1)
+histo(action)
+ajout('infraction',location.search.substring(1),1)
+history.back()
+
+}
+
+function cancre(action) {
+ajout(action,location.search.substring(1),1)
+histo(action)
+ajout('cancre',location.search.substring(1),1)
+history.back()
+
+}
+
+
+function serieux(action) {
+ajout(action,location.search.substring(1),1)
+histo(action)
+ajout('serieux',location.search.substring(1),1)
+history.back()
+
+
+}
+
+function calendrier(action) {
+jour=new Date()
+annee=jour.getFullYear()
+
+if (jour.getDate()<24) {
+mois=jour.getMonth()+1
+jour=jour.getDate()+7
+}
+else
+{
+mois=jour.getMonth()+2
+jour=jour.getDate()-23
+}
+
+if (mois<10) {
+mois='0'+mois
+}
+if (jour<10) {
+jour='0'+jour
+}
+
+jour=annee+'-'+mois+'-'+jour
+
+document.getElementById('boutons').style='display:none';
+calendar=document.getElementById('calendrier')
+calendar.style='display: block; margin-left: auto; margin-right: auto; margin-top: 100px ; font-size: 20pt; padding : 20px;'
+calendar.value=jour
+calendar.focus()
+
+ajout(action,location.search.substring(1),1)
+histo(action)
+
+
+}
+
+function histo(action) {
+jour = new Date()
+jour=jour.getDate()+'/' + (jour.getMonth()+1)
+
+localStorage.setItem('historique',localStorage.getItem('historique')+location.search.substring(1)+jour+action+'=')
+
+}
+
+
+function enregistre(date) {
+
+jour=date.split('-')
+
+jour=jour[2]+'/'+jour[1]
+
+ajout('date',location.search.substring(1),jour)
+history.back()
+
+
+}
+
+
+ </script>
+
+	</html>

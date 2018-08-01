@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <meta charset="utf-8" />
+<link rel="stylesheet" href="style.css" />
+        <title>NouvelleClasse</title>
+
+    </head>
+<body onload="tableauClasse()">	
+
+
+<table id="listefinale">
+
+   <tr>
+  
+
+       <th>Nom</th>
+
+       <th>Prénom</th>
+
+       <th>Surnom</th>
+ 
+	<th>Groupe</th>
+	
+	<th>Hasard</th>
+	
+	<th>Suppression</th>
+   </tr>
+   
+   <tr id="ligne">
+       <td><input value="" style="width:150px" class="nom"></td>
+
+       <td><input value="" style="width:150px" class="prenom"></td>
+
+       <td><input value="" style="width:150px" class="surnom" ></td>
+	   
+	   <td><input type="number" value="" style="width:50px" class="groupe" ></td>
+
+	   <td><input type="number" value="" style="width:50px" class="hasard" ></td>
+	   
+	   <td><input type="checkbox"  style="width:50px" class="supprimer" ></td>
+	   
+   </tr>
+
+
+
+</table>
+
+<p><input type="button" value="Nouvel Elève" onclick="nouvelEleve()"> </p>
+
+<p> <input type="button" value="Validation" onclick="valideModif()"> </p>
+
+<script src="recupInfo.js"> </script>
+
+<script>
+
+
+ligne=document.getElementById('ligne').innerHTML
+
+function tableauClasse() {
+
+
+
+liste=localStorage.getItem(location.search.substring(1)).split('=')
+
+
+
+
+tableau=document.getElementById('listefinale')
+
+
+
+for (var i=1 ; i<liste.length ; i++) {
+
+if (liste[i-1]!='') {
+var nouvelleLigne = document.createElement('tr');
+nouvelleLigne.innerHTML=ligne
+tableau.appendChild(nouvelleLigne)
+}
+
+}
+
+listeNoms=document.getElementsByClassName('nom');
+listePrenoms=document.getElementsByClassName('prenom');
+listeSurnoms=document.getElementsByClassName('surnom');
+listeGroupes=document.getElementsByClassName('groupe');
+listeHasards=document.getElementsByClassName('hasard');
+listeSuppressions=document.getElementsByClassName('supprimer');
+
+for (var i=0 ;i<liste.length ; i++) {
+
+listeNoms[i].value=lecture('nom',liste[i])
+listePrenoms[i].value=lecture('prenom',liste[i])
+listeSurnoms[i].value=liste[i]
+listeHasards[i].value=lecture('hasard',liste[i])
+listeGroupes[i].value=lecture('groupe',liste[i])
+
+}
+
+
+
+
+
+
+}
+
+function valideModif() {
+
+listeNoms=document.getElementsByClassName('nom');
+listePrenoms=document.getElementsByClassName('prenom');
+listeSurnoms=document.getElementsByClassName('surnom');
+listeGroupes=document.getElementsByClassName('groupe');
+listeHasards=document.getElementsByClassName('hasard');
+listeSuppressions=document.getElementsByClassName('supprimer');
+
+listeclasse='' 
+
+for (var i=0 ; i<listeSurnoms.length ; i++) {
+
+if (listeSuppressions[i].checked) {
+
+localStorage.removeItem(listeSurnoms[i].value)
+
+
+}
+
+else
+
+{
+
+
+eleve=listeSurnoms[i].value;
+if (eleve !='') {
+
+if (!(localStorage.getItem(eleve)) ) {
+localStorage.setItem(eleve, '');
+ecriture('date',eleve,'');
+}
+
+ecriture('nom',eleve,listeNoms[i].value);
+ecriture('prenom',eleve,listePrenoms[i].value);
+ecriture('hasard',eleve,listeHasards[i].value);
+ecriture('groupe',eleve,listeGroupes[i].value);
+
+
+listeclasse=listeclasse+eleve+'=';
+
+
+}
+
+}
+
+}
+
+localStorage.setItem(location.search.substring(1),listeclasse)
+alert('la classe a bien été modifiée')
+document.location.href='index.html'
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+function nouvelEleve() {
+tableau=document.getElementById('listefinale')
+var nouvelleLigne = document.createElement('tr')
+alert(ligne)
+nouvelleLigne.innerHTML=ligne
+tableau.appendChild(nouvelleLigne)
+
+}
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+</body>
+
+
+
+	</html>

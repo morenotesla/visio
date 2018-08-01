@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <meta charset="utf-8" />
+<link rel="stylesheet" href="style.css" />
+        <title>Carres</title>
+
+    </head>
+	
+<body>	
+
+
+<p id="identite"> </p>
+
+<p  id="Bilanpos" style='color : green' > 
+
+
+
+
+</p>
+
+
+
+
+<p  id="Bilanneg" style='color : red'> 
+
+
+
+
+</p>	
+	
+	
+<p id="Historique">
+
+
+
+ </p>	
+	
+<input type="button" class="boutonAction" value="Menu" onclick="document.location.href='index.html'">
+	<input type="button" class="boutonAction" value="Retour" onclick="window.history.go(-2)">
+
+</body>
+
+<script src="recupInfo.js"> </script>
+
+<script> 
+eleve=location.search.substring(1)
+
+document.getElementById('identite').innerHTML='Nom : '+lecture('nom',eleve)+'   '+'Prenom : '+lecture('prenom',eleve)
+
+
+elementsneg=['telephone','bavardage','insolence','travail-','retard','absence','materiel','installation-','carnet','punition']
+elementspos=['participation','travail+','installation+','TRAVAIL++']
+bilanpos='<h3>Bilan positif</h3>'
+bilanneg='<h3>Bilan négatif</h3>'
+
+for (var i=0 ; i<elementspos.length ; i++) {
+
+bilanpos=bilanpos+elementspos[i]+' : '+lecture(elementspos[i],eleve)+'</br>'
+}
+
+for (var i=0 ; i<elementsneg.length ; i++) {
+
+bilanneg=bilanneg+elementsneg[i]+' : '+lecture(elementsneg[i],eleve)+'</br>'
+}
+
+historique=localStorage.getItem('historique')
+
+
+
+
+pos=historique.indexOf(eleve)
+
+histoeleve='<h3>Historique</h3>'
+
+
+
+while (pos !=-1) {
+
+
+action=historique.substring(pos+eleve.length,historique.indexOf('=',pos+1))
+pos=historique.indexOf(eleve,pos+eleve.length+1)
+
+
+if (action.indexOf('exercice')==-1) {
+
+//on regarde si l'action est positive
+positif=true 
+for (var i=0 ; i<elementsneg.length ; i++) {
+if (action.indexOf(elementsneg[i]!=-1)) {
+positif=false
+} 
+}
+
+if (positif) {
+action='<span style="color : green" >'+action+'</span> </br>'
+}
+else
+{
+action='<span style="color : red" >'+action+'</span> </br>'
+}
+
+
+histoeleve=histoeleve+action
+}
+
+}
+
+document.getElementById('Bilanpos').innerHTML=bilanpos
+document.getElementById('Bilanneg').innerHTML=bilanneg
+document.getElementById('Historique').innerHTML=histoeleve
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+	</html>

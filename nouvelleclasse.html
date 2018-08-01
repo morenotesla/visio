@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <meta charset="utf-8" />
+<link rel="stylesheet" href="style.css" />
+        <title>NouvelleClasse</title>
+
+    </head>
+<body>	
+<div id="depart">	
+	
+<p> 	
+Copier-Coller la liste d'élèves dans le cadre ci-dessous	
+</p>
+<p> 	
+Les noms doivent être entièrement en majuscules, les prénoms commencent par une majuscule. Pas d'accent sur les majuscules.	
+</p>
+<p> 	
+Attention les noms ou prénoms composés doivent obligatoirement être reliés par un tiret 
+</p>
+<p> 	
+Vous pouvez mettre le numéro du groupe (1 ou 2) à la fin, soit pour tous les élèves soit pour aucun
+</p>
+<p> 	
+Exemple : DELARUE Jean-Edouard 2
+</p>
+<textarea id="listeEleves" cols="80" rows="36">
+
+
+</textarea>
+
+<input type="button" value="Initialisation" onclick="creationListe()">
+
+</div>
+<div id="fin" style="display:none">	
+<table id="listefinale">
+
+   <tr>
+  
+
+       <th>Nom</th>
+
+       <th>Prénom</th>
+
+       <th>Surnom</th>
+ 
+	<th>Groupe</th>
+   </tr>
+   
+   <tr id="ligne">
+       <td><input value="" style="width:150px" class="nom"></td>
+
+       <td><input value="" style="width:150px" class="prenom"></td>
+
+       <td><input value="" style="width:150px" class="surnom" ></td>
+	   
+	   <td><input type="number" value="" style="width:50px" class="groupe" ></td>
+
+   </tr>
+
+
+
+</table>
+
+<input id="nomClasse" value="Nom de la classe">  <input type="button" value="Validation" onclick="validation()">
+</div>
+<script>
+
+function creationListe() {
+
+
+
+phrase=document.getElementById('listeEleves').value.trim()
+noms=phrase.match(/[A-Z]{2,}-?[A-Z]*/g)
+prenoms=phrase.match(/[A-Z][a-zâäàéèùêëîïôöçñ]+-?[A-Z]?[a-zâäàéèùêëîïôöçñ]+/g)
+groupes=phrase.match(/[12]/g)
+
+//groupes vide si tout le monde n'a pas de groupe
+if (groupes==null || groupes.length<prenoms.length) {
+groupes=[]
+for (var i=0 ; i<prenoms.length  ; i++) {
+groupes.push('')
+}
+}
+
+for (var i=0 ; i<prenoms.length  ; i++) {
+
+prenoms[i]=sansaccent(prenoms[i])
+
+}
+
+
+
+
+if (noms.length!=prenoms.length) {
+alert('Attention il n\'y a pas autant de noms que de prénoms')}
+else {
+surnoms=[]
+
+//10 désigne la taille maximale du prenom avant coupure
+for (var i=0 ; i<prenoms.length ; i++) {
+surnoms.push(prenoms[i].substring(0,10)+noms[i].substring(0,3) )
+}
+
+
+
+
+tableauFinal(noms,prenoms,surnoms,groupes)
+
+}
+
+
+}
+
+
+function tableauFinal(noms,prenoms,surnoms,groupes) {
+
+tableau=document.getElementById('listefinale')
+
+document.getElementById('depart').style='display:none'
+document.getElementById('fin').style='display:block'
+
+ligne=document.getElementById('ligne').innerHTML
+
+
+for (var i=1 ; i<noms.length ; i++) {
+var nouvelleLigne = document.createElement('tr');
+nouvelleLigne.innerHTML=ligne
+tableau.appendChild(nouvelleLigne)
+
+}
+
+listeNoms=document.getElementsByClassName('nom');
+listePrenoms=document.getElementsByClassName('prenom');
+listeSurnoms=document.getElementsByClassName('surnom');
+listeGroupes=document.getElementsByClassName('groupe');
+
+for (var i=0 ;i<noms.length ; i++) {
+
+listeNoms[i].value=noms[i]
+listePrenoms[i].value=prenoms[i]
+listeSurnoms[i].value=surnoms[i]
+listeGroupes[i].value=groupes[i]
+}
+
+
+}
+
+
+
+function validation() {
+
+nomClasse=document.getElementById('nomClasse').value
+
+if (nomClasse=='Nom de la classe') {
+document.getElementById('nomClasse').style='border: 2px solid red;'
+alert('Renseignez un nom de classe')
+
+}
+else
+
+{
+
+listeNoms=document.getElementsByClassName('nom');
+listePrenoms=document.getElementsByClassName('prenom');
+listeSurnoms=document.getElementsByClassName('surnom');
+listeGroupes=document.getElementsByClassName('groupe');
+
+
+listeEleves=''
+
+for (var i=0 ; i<listeNoms.length  ; i++) {
+
+listeEleves=listeEleves+listeSurnoms[i].value+'='
+
+localStorage.setItem(listeSurnoms[i].value, '=nom'+listeNoms[i].value+'=prenom'+listePrenoms[i].value+'=groupe'+listeGroupes[i].value+'=hasard3=date');
+
+
+}
+
+localStorage.setItem(nomClasse,listeEleves);
+
+
+if (localStorage.listeClasses) {
+
+
+localStorage.setItem('listeClasses', localStorage.getItem('listeClasses')+'='+nomClasse);
+
+}
+
+else {
+
+localStorage.setItem('listeClasses',nomClasse)
+
+
+}
+
+alert('La classe a bien été créée')
+document.location.href='index.html'
+
+}
+
+
+}
+
+//retire les accents
+function sansaccent(texte) {
+
+
+lettresaccent='âäàéèùêëîïôöçñ'
+lettresnormales='aaaeeueeiioocn'
+
+for (var i=0 ; i<lettresaccent.length ; i++) {
+
+var regex = new RegExp(lettresaccent.charAt(i), "g");
+texte=texte.replace(regex,lettresnormales.charAt(i))
+}
+return texte
+
+
+}
+
+
+</script>
+
+
+
+
+
+
+</body>
+
+
+
+	</html>

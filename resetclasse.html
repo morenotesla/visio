@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <meta charset="utf-8" />
+<link rel="stylesheet" href="style.css" />
+        <title>ResetClasse</title>
+
+    </head>
+<body >	
+
+
+<table >
+
+   <tr>
+  <td>bavardage</td>
+
+ <td><input type="checkbox" id="bavardage" class="toto" checked="true" </td>
+
+       
+   </tr>
+   
+      <tr>
+  <td>telephone</td>
+
+ <td><input type="checkbox" id="telephone" class="toto" checked="true" </td>
+
+       
+   </tr>
+      <tr>
+  <td>insolence</td>
+
+ <td><input type="checkbox" id="insolence" class="toto" checked="true" </td>
+</tr>
+ 
+    <tr>
+	
+  <td>materiel</td>
+
+ <td><input type="checkbox" id="materiel" class="toto" checked="true" </td>
+  
+   </tr>    
+  <td>travail-</td>
+
+ <td><input type="checkbox" id="travail-" class="toto" checked="true" </td>
+  
+   </tr>  
+    
+  <td>installation-</td>
+
+ <td><input type="checkbox" id="installation-" class="toto" checked="true" </td>
+  
+   </tr>  	
+
+  <td>retard</td>
+
+ <td><input type="checkbox" id="retard" class="toto" checked="true" </td>
+  
+   </tr>  
+   
+     <td>absence</td>
+
+ <td><input type="checkbox" id="absence" class="toto" checked="true" </td>
+  
+   </tr>  
+   
+     <td>participation</td>
+
+ <td><input type="checkbox" id="participation" class="toto" checked="true" </td>
+  
+   </tr>  
+   
+   
+     <td>installation+</td>
+
+ <td><input type="checkbox" id="installation+" class="toto" checked="true" </td>
+  
+   </tr>  
+
+   
+     <td>travail+</td>
+
+ <td><input type="checkbox" id="travail+" class="toto" checked="true" </td>
+  
+   </tr>  
+   
+     <td>TRAVAIL++</td>
+
+ <td><input type="checkbox" id="TRAVAIL++" class="toto" checked="true" </td>
+  
+   </tr>  
+   
+     <td>carnet</td>
+
+ <td><input type="checkbox" id="carnet" class="toto" checked="true" </td>
+  
+   </tr>  
+   
+     <td>punition</td>
+
+ <td><input type="checkbox" id="punition" class="toto" checked="true" </td>
+  
+   </tr>  
+   
+     <td>cancre</td>
+
+ <td><input type="checkbox" id="cancre" class="toto" checked="true" </td>
+  
+   </tr>  
+   
+     <td>serieux</td>
+
+ <td><input type="checkbox" id="serieux" class="toto" checked="true" </td>
+  
+   </tr>  
+   
+     <td>infraction</td>
+
+ <td><input type="checkbox" id="infraction" class="toto" checked="true" </td>
+  
+   </tr>  
+   
+   
+     <td>exercice</td>
+
+ <td><input type="checkbox" id="exercice" class="toto" checked="true" </td>
+  
+   </tr>  
+   
+     <td>Trucs à montrer</td>
+
+ <td><input type="checkbox" id="date"> </td>
+  
+   </tr>  
+   
+</table>
+
+
+
+<p> <input type="button" value="Validation" onclick="initReset()"> </p>
+
+<script src="recupInfo.js"> </script>
+
+<script>
+
+function initReset() {
+
+nomClasse=location.search.substring(1);
+
+if (nomClasse=='TOUTESLESCLASSES') {
+
+listeClasses=localStorage.getItem('listeClasses').split('=')
+for (var i=0 ; i<listeClasses.length ; i++) {
+
+valideReset(listeClasses[i])
+}
+
+}
+
+else {
+
+valideReset(nomClasse)
+
+}
+
+document.location.href='index.html'
+
+}
+
+
+function valideReset(nomClasse) {
+
+
+actions=document.getElementsByClassName("toto");
+listeclasse=localStorage.getItem(nomClasse).split('=')
+
+for (var i=0 ; i<listeclasse.length ; i++) {
+
+for (var j=0 ; j<actions.length ; j++) {
+
+if (listeclasse[i]!='' && actions[j].checked) {
+
+ecriture(actions[j].id, listeclasse[i],0)
+
+}
+
+}
+
+if (listeclasse[i]!='' && document.getElementById('date').checked) {
+
+ecriture('date', listeclasse[i],'')
+}
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+</body>
+
+
+
+	</html>
