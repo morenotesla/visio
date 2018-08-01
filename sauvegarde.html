@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <meta charset="utf-8" />
+<link rel="stylesheet" href="style.css" />
+        <title>Carres</title>
+
+    </head>
+	
+<body>	
+
+<textarea id="archive" style="width:300px; heigh:300px">
+
+</textarea> </br>
+
+<input type="button" class="boutonmenu" value="Sauvegarder" onclick="sauvegarder()"> </br>
+<input type="button" class="boutonmenu" value="Charger" onclick="charger()"> </br>
+<a href="index.html" > <input type="button" class="boutonmenu" value="Menu"> <a>
+
+</body>
+
+<script src="recupInfo.js"> </script>
+
+<script> 
+
+function sauvegarder() {
+
+var arecup=['listeClasses','historique','codepin']
+
+tableauClasses=localStorage.getItem('listeClasses').split('=')
+
+for (var i=0 ; i<tableauClasses.length ; i++) {
+
+nomClasse=tableauClasses[i]
+if (nomClasse !='') {
+arecup.push(nomClasse)
+tableauEleves=localStorage.getItem(nomClasse).split('=')
+
+for (var j=0 ; j<tableauEleves.length ; j++) {
+
+surnomEleve=tableauEleves[j]
+if (surnomEleve !='') {
+
+arecup.push(surnomEleve)
+
+
+}
+}
+
+}
+
+}
+
+res=''
+
+for (var i=0 ; i<arecup.length ; i++) {
+
+res=res+arecup[i]+'*'+localStorage.getItem(arecup[i])+'$'
+
+}
+
+
+
+
+
+document.getElementById("archive").innerHTML=res
+ var copyText = document.getElementById("archive");
+
+  /* Select the text field */
+  copyText.select();
+
+  /* Copy the text inside the text field */
+  document.execCommand('copy');
+
+}
+
+function charger() {
+var data = document.getElementById("archive").value.split('$');
+
+for (var i=0 ; i<(data.length-1) ; i++) {
+
+nouvelitem=data[i].split('*');
+
+localStorage.setItem(nouvelitem[0],nouvelitem[1]);
+
+
+
+
+
+}
+
+
+
+
+}
+
+
+</script>
+
+
+
+	</html>

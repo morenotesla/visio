@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <meta charset="utf-8" />
+<link rel="stylesheet" href="style.css" />
+        <title>Menu</title>
+
+    </head>
+	
+<body onload="initListeClasse()" >	
+
+
+
+	<div id="listeclasses" style="position : absolute ; left : 10px ; display : flex ;flex-direction: column; ">
+
+
+
+	</div>
+
+	
+	
+	
+	<div style="position : absolute ; right : 10px ;">	
+	<input type="button" value="Edition" onclick="securite()">	
+	<input type="password" id="motdepasse"> 	
+		<div id="menuedition" style="display : none ; ">	
+
+			<a href="nouvelleclasse.html"> <input type="button" value="NouvelleClasse" class="boutonmenu"></a>
+			<div> <input type="button" value="HasardClasse" onclick="initChangeHasard()" class="boutonmenu">	<input id="classeHasard" value="NomClasse" > Quantité hasard : <input id="quantHasard" type="number" value="3" >	</div>
+			<input type="button" value="SupprimerClasse" onclick="initSuppression()" class="boutonmenu">	
+			<input type="button" value="ModifierClasse" onclick="modifclasse()" class="boutonmenu">	
+
+			<div> <input type="button" value="ViderHistorique" onclick="videHisto()" class="boutonmenu"> Nombre de mois à conserver : <input id="semaines" type="number" value="2" max="12" min="0" >	</div>
+
+			<input type="button" value="ResetClasse" onclick="resetclasse()" class="boutonmenu">
+			<a href="sauvegarde.html" ><input type="button" value="Sauvegarder/Charger" class="boutonmenu"></a>
+		</div >
+
+
+	</div >
+
+
+
+</body>
+
+
+<script src="recupInfo.js"> </script>
+
+<script>
+
+
+//création des listes de classe
+
+function initListeClasse() {
+
+emplacement=document.getElementById('listeclasses')
+emplacement.innerHTML=''
+
+liste=localStorage.listeClasses.split('=')
+for (var i=0 ; i<liste.length ; i++) {
+if (liste[i]!='') {
+var nouveauBouton = document.createElement('a');
+nouveauBouton.href='visionClasse.html?'+liste[i];
+nouveauBouton.innerHTML='<input type="button" style="height:60px ; margin:10px;" value="'+liste[i]+'">'
+emplacement.appendChild(nouveauBouton)
+}
+}
+
+}
+
+//mot de passe requis pour editer
+function securite() {
+
+if (localStorage.codepin) {
+if (localStorage.codepin==document.getElementById('motdepasse').value) {
+document.getElementById('menuedition').style='display : flex ; flex-direction: column; '
+}
+else {
+alert('Mot de passe erroné')
+}
+}
+else
+{
+var code=prompt('Créez un code pour votre premiere connection','')
+
+localStorage.setItem('codepin',code)
+localStorage.setItem('historique','')
+}
+}
+
+//suppression d'une classe
+function initSuppression() {
+
+var nomClasse=prompt('Quel est le nom de la classe à supprimer ?','')
+
+if (nomClasse=='TOUTESLESCLASSES') {
+
+listeClasses=localStorage.getItem('listeClasses').split('=')
+for (var i=0 ; i<listeClasses.length ; i++) {
+
+suppression(listeClasses[i])
+}
+
+}
+
+else {
+
+suppression(nomClasse)
+}
+
+}
+
+
+function suppression(nomClasse) {
+if (localStorage.getItem(nomClasse)) {
+
+listeEleves=localStorage.getItem(nomClasse).split('=')
+
+for (var i=0 ; i<listeEleves.length-1 ; i++ ) {
+
+
+localStorage.removeItem(listeEleves[i]);
+
+}
+
+localStorage.removeItem(nomClasse);
+
+lisCla=localStorage.listeClasses.split('=')
+res=''
+
+for (var i=0 ; i<lisCla.length ; i++) {
+if (lisCla[i]!=nomClasse && lisCla[i]!='') {
+res=res+lisCla[i]+'='
+}
+}
+
+localStorage.setItem('listeClasses',res);
+
+
+
+initListeClasse()
+
+}
+
+else
+{
+alert('Cette classe n\' existe pas')
+}
+
+
+}
+
+//changelehasarddelaclasse
+function initChangeHasard() {
+
+classe=document.getElementById('classeHasard').value
+
+quantite=document.getElementById('quantHasard').value
+
+if (classe=='TOUTESLESCLASSES') {
+
+listeClasses=localStorage.getItem('listeClasses').split('=')
+for (var i=0 ; i<listeClasses.length ; i++) {
+
+changeHasard(listeClasses[i],quantite)
+}
+
+}
+
+else {
+
+changeHasard(classe)
+}
+
+}
+
+function changeHasard(classe,quantite) {
+
+
+if (localStorage.getItem(classe)) {
+liste=localStorage.getItem(classe).split('=')
+for (var i=0 ; i<liste.length ; i++ ) {
+
+ecriture('hasard',liste[i],quantite)
+
+}
+
+
+}
+else
+{
+alert('Saisir un nom valide de classe')
+document.getElementById('classeHasard').style='border : 1px red solid'
+
+}
+
+}
+
+//envoie vers la modificiationd de la classe
+function modifclasse() {
+
+var nomClasse=prompt('Quel est le nom de la classe à modifier ?','')
+
+
+
+if (localStorage.getItem(nomClasse)) {
+
+document.location.href='modifclasse.html?'+nomClasse
+
+
+}
+
+else
+
+{
+
+alert('Ce nom n\' est pas valide')
+}
+
+
+}
+
+
+//vide l'historique, attention les années ne sont pas là
+function videHisto() {
+jour=new Date()
+moiscourant=jour.getMonth()+1
+
+moispasse=moiscourant-parseInt(document.getElementById('semaines').value)
+if (moispasse<=0) {
+moispasse=moispasse+12 }
+
+
+if (document.getElementById('semaines').value==0) {
+
+localStorage.setItem('historique','')
+
+}
+
+else {
+
+historique=localStorage.getItem('historique')
+
+while (historique.indexOf('/'+moispasse)==-1 && moispasse<=12 )
+
+{
+moispasse=moispasse+1
+
+}
+
+if (moispasse==13) {
+
+localStorage.setItem('historique','')
+
+}
+
+localStorage.setItem('historique',historique.substring(historique.indexOf('/'+moispasse)-3))
+
+}
+
+}
+
+
+//envoie vers la page pour le reset
+function resetclasse() {
+
+var nomClasse=prompt('Quel est le nom de la classe à réinitialiser ?','')
+if (localStorage.getItem(nomClasse) || nomClasse=='TOUTESLESCLASSES') {
+
+document.location.href='resetclasse.html?'+nomClasse
+
+
+}
+
+else
+
+{
+
+alert('Ce nom n\' est pas valide')
+}
+}
+
+</script>
+
+
+
+
+	</html>

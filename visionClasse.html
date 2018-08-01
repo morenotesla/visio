@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <meta charset="utf-8" />
+<link rel="stylesheet" href="style.css" />
+        <title>Classe</title>
+
+    </head>
+	
+<body onload="initEleves(0)">	
+	
+	
+<div id="emplacement" >
+
+
+
+</div>
+	
+<div style="border : 2px black solid ; display: inline-block ; padding : 10px ; background-image : url('hasard.png');">	
+<input type="button" value="EleveAuHasard" id="boutonHasard" onclick="auHasard()">
+
+
+ <input type="button" value="" id="quelhasard" style="display : none ;" onclick="ajout('hasard',this.value,-1); document.location.href='actions.html?'+this.value"></div>
+</div>
+<p>
+
+ <input type="radio" id="entiere" name="sousclasse" checked="true" onclick="initEleves()"/> Classe Entière
+  <input type="radio" id="groupe1" name="sousclasse"  onclick="initEleves()"/> Groupe 1       
+<input type="radio" id="groupe2" name="sousclasse" onclick="initEleves()"/>  Groupe 2
+</p>
+
+<p>
+Visuel basé sur...
+ <input type="radio" id="basemoyenne" name="basevisu" checked="true" onclick="initEleves()"/> Moyenne      
+<input type="radio"  name="basevisu" onclick="initEleves()"/>  Quartiles
+
+</p>
+
+
+<p>
+<a href="index.html"> <input type="button" value="Menu Principal"> </a>
+</p>
+
+</body>
+
+<script src="recupInfo.js"> </script>
+
+<script>
+
+function initEleves() {
+liste=localStorage.getItem(location.search.substring(1)).split('=')
+
+
+sousclasse=0
+if (document.getElementById('groupe1').checked) {
+sousclasse=1
+}
+if (document.getElementById('groupe2').checked) {
+sousclasse=2
+}
+
+emplacement=document.getElementById('emplacement')
+emplacement.innerHTML=''
+
+//calcul des valeurs moyennes et des quartile
+cancremoyen=0
+serieuxmoyen=0
+infractionmoyen=0
+listecancre=[]
+listeserieux=[]
+listeinfraction=[]
+
+for (var i=0 ; i<liste.length ; i++) {
+if (localStorage.getItem(liste[i])) {
+cancre=lecture('cancre',liste[i])
+serieux=lecture('serieux',liste[i])
+infraction=lecture('infraction',liste[i])
+
+cancremoyen=cancremoyen+cancre
+serieuxmoyen=serieuxmoyen+serieux
+infractionmoyen=infractionmoyen+infraction
+
+listecancre.push(cancre)
+listeserieux.push(serieux)
+listeinfraction.push(infraction)
+}
+}
+
+cancremoyen=cancremoyen/(liste.length)
+
+serieuxmoyen=serieuxmoyen/(liste.length)
+infractionmoyen=infractionmoyen/(liste.length)
+
+listecancre.sort(function(a, b){return parseInt(a) - parseInt(b)});
+listeinfraction.sort(function(a, b){return parseInt(a) - parseInt(b)});
+listeserieux.sort(function(a, b){return parseInt(a) - parseInt(b)});
+N=listecancre.length
+
+quartile1=[listecancre[Math.floor(N/4)],listeinfraction[Math.floor(N/4)],listeserieux[Math.floor(N/4)]]
+mediane=[listecancre[Math.floor(N/2)],listeinfraction[Math.floor(N/2)],listeserieux[Math.floor(N/2)]]
+quartile3=[listecancre[Math.floor(3*N/4)],listeinfraction[Math.floor(3*N/4)],listeserieux[Math.floor(3*N/4)]]
+
+
+//fin du cal
+
+for (var i=0 ; i<liste.length-1 ; i++) {
+
+if ((sousclasse==0 || lecture('groupe',liste[i])==sousclasse) && (liste[i]!='')) {
+var nouveauBouton = document.createElement('a');
+nouveauBouton.href='actions.html?'+liste[i];
+nouveauBouton.innerHTML='<input type="button" class="boutonEleve" value="'+liste[i]+'" style="'+quelStyle(cancremoyen,serieuxmoyen,infractionmoyen,liste[i],quartile1,mediane,quartile3)+'">'
+emplacement.appendChild(nouveauBouton)
+
+}
+
+}
+
+}
+
+
+function auHasard() {
+
+liste=localStorage.getItem(location.search.substring(1)).split('=')
+
+if (document.getElementById('entiere').checked) { 
+sousclasse=0;
+}
+if (document.getElementById('groupe1').checked) { 
+sousclasse=1 }
+if (document.getElementById('groupe2').checked) { 
+sousclasse=2 }
+
+total=[]
+for (var i=0 ; i<liste.length-1 ; i++) {
+
+if (sousclasse==0 || lecture('groupe',liste[i])==sousclasse) {
+
+for (var j=0 ; j<lecture('hasard',liste[i]) ; j++) {
+
+total.push(liste[i])
+
+}
+
+
+}
+
+
+
+}
+nom=total[Math.floor(Math.random()*total.length)]
+
+
+lien=document.getElementById('quelhasard')
+lien.value=nom
+
+lien.style="display : block"
+
+
+
+}
+
+
+
+function quelStyle(cm,sm,im,eleve,q1,med,q3) {
+
+res=' '
+serieux=lecture('serieux',eleve)
+cancre=lecture('cancre',eleve)
+infraction=lecture('infraction',eleve)
+
+if (document.getElementById('basemoyenne').checked) {
+
+
+
+//comparaison serieux
+
+if (serieux<sm-3) {
+res=res+'font-size : 15pt;'
+}
+if (serieux>sm+3) {
+res=res+'font-size : 8pt;'
+}
+else if (serieux>sm+1) {
+res=res+'font-size : 10pt;'
+}
+
+
+
+//comparaison cancre
+
+if (cancre>cm+3) {
+res=res+'background-color:rgba(255,255,0,0.8);'
+}
+else
+{
+if (cancre>cm+1) {
+res=res+'background-color:rgba(255,255,0,0.3);'
+}
+}
+
+
+
+//comparaison infraction
+
+if (infraction>im+3) {
+res=res+'color:rgba(255,0,0,1.2);'
+}
+else
+{
+if (infraction>im+1) {
+res=res+'color:rgba(255,0,0,0.3);'
+}
+}
+
+
+//cas extremes avec ombres
+if ((infraction>im+6) && (cancre>cm+6)) {
+res=res+'box-shadow: -5px -5px 4px red , 5px 5px 4px gold;'
+}
+else {
+if (cancre>cm+6) {
+res=res+'box-shadow: 5px 5px 4px gold;'
+}
+if (infraction>im+6) {
+res=res+'box-shadow: -5px -5px 4px red;'
+}
+}
+
+}
+
+else
+//ordre du tableau  cancre, infraction, serieux
+{
+
+//comparaison serieux
+
+if (serieux<q1[2]) {
+res=res+'font-size : 15pt;'
+}
+if (serieux>q3[2]) {
+
+res=res+'font-size : 8pt;'
+}
+else if (serieux>med[2]) {
+
+res=res+'font-size : 10pt;'
+}
+
+//comparaison cancre
+
+if (cancre>med[0]) {
+res=res+'background-color:rgba(255,255,0,0.8);'
+}
+else if (cancre>q1[0]) {
+res=res+'background-color:rgba(255,255,0,0.3);'
+}
+
+
+
+
+//comparaison infraction
+
+if (infraction>med[1]) {
+res=res+'color:rgba(255,0,0,1.2);'
+}
+else if (infraction>q1[1]) {
+res=res+'color:rgba(255,0,0,0.3);'
+}
+
+
+
+//cas extremes avec ombres
+if ((infraction>q3[1]) && (cancre>q3[0])) {
+res=res+'box-shadow: -5px -5px 4px red , 5px 5px 4px gold;'
+}
+else 
+{
+if (cancre>q3[0]) {
+res=res+'box-shadow: 5px 5px 4px gold;'
+}
+if (infraction>q3[1]) {
+res=res+'box-shadow: -5px -5px 4px red;'
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+//etude de la date
+jour=new Date()
+mois=jour.getMonth()+1
+jour=jour.getDate()
+
+
+if (mois<10) {
+mois='0'+mois
+}
+if (jour<10) {
+jour='0'+jour
+}
+
+jour=jour+'/'+mois
+if (lecture('date',eleve).indexOf(jour)!=-1) {
+
+res=res+'border:5px black solid;'
+}
+
+
+
+return res
+
+}
+
+
+
+</script>
+
+
+	</html>
