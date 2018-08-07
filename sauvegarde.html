@@ -78,7 +78,7 @@ document.getElementById("archive").innerHTML=res
 }
 
 function charger() {
-var data = document.getElementById("archive").value.split('$');
+var data = document.getElementById("archive").value.trim().split('$');
 
 for (var i=0 ; i<(data.length-1) ; i++) {
 
