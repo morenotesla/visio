@@ -33,9 +33,9 @@
 	
 	<input type="button" class="boutonAction" value="Installation-" onclick="cancre('installation-')" style="color: inherit">
 	
-	<input type="button" class="boutonAction" value="Retard" onclick="cancre('retard')" style="color: inherit">
+	<input type="button" class="boutonAction" value="Retard" onclick="verif_absence_retard(); cancre('retard')" style="color: inherit">
 	
-	<input type="button" class="boutonAction" value="Absence" onclick="cancre('absence')" style="color: inherit">
+	<input type="button" class="boutonAction" value="Absence" onclick="sauvegarde_absence(); cancre('absence')" style="color: inherit">
 	</p>
 	    
 <p style="color:green">		
@@ -163,6 +163,44 @@ history.back()
 
 
 }
+	
+function sauvegarde_absence() {
+surnom=location.search.substring(1)
+
+if (sessionStorage.getItem("listeAbsents")) {
+
+sessionStorage.setItem("listeAbsents",sessionStorage.getItem("listeAbsents")+"="+surnom)
+
+}
+
+else
+
+{
+
+sessionStorage.setItem("listeAbsents",surnom)
+
+}
+
+}
+
+
+function verif_absence_retard() {
+surnom=location.search.substring(1)
+
+if (sessionStorage.getItem("listeAbsents")) {
+listeAbsents=sessionStorage.getItem("listeAbsents");
+if (listeAbsents.indexOf(surnom)!=-1) {
+pos=listeAbsents.indexOf(surnom)
+listeAbsents=listeAbsents.substring(0,pos)+listeAbsents.substring(pos+surnom.length+1)
+sessionStorage.setItem("listeAbsents",listeAbsents)
+ajout('absence',surnom,-1)
+ajout('cancre',surnom,-1)
+}
+}
+
+
+
+}	
 
 
  </script>
