@@ -318,7 +318,14 @@ if (lecture('date',eleve).indexOf(jour)!=-1) {
 res=res+'border:5px black solid;'
 }
 
+//regarde si l'élève est absent
+if (sessionStorage.getItem("listeAbsents")){
+listeAbsents=sessionStorage.getItem("listeAbsents");
+if (listeAbsents.indexOf(eleve)!=-1) {
+res=res+'opacity:0.4;'
+}
 
+}
 
 return res
 
